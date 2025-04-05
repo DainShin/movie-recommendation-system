@@ -11,7 +11,7 @@ tmdb.api_key = 'fdfd2228235a69f1627fcb50dca81c80'  #tmdb site. username: DainShi
 # Make function
 def get_recommendations(title):
     # Get the index through the title
-    idx = movies[movies['title'] == title].index[0]  # movies['title'] 과 전달받은 title이 똑같은것. 인덱스 값은 배열로 넘어오기때문에 index[0]
+    idx = movies[movies['title'] == title].index[0] 
 
     # In the cosine similarity matrix, get (idx, similarity) 
     sim_scores = list(enumerate(cosine_sim[idx]))
@@ -29,7 +29,7 @@ def get_recommendations(title):
     images = []
     titles = []
     for i in movie_indices:
-        id = movies['id'].iloc[i] # pickle을 통해서 데이터를 가져온 movies에는 영화 id, title 값있음
+        id = movies['id'].iloc[i] 
         details = movie.details(id)
 
         # Check if the image exists
@@ -41,32 +41,32 @@ def get_recommendations(title):
 
 
         images.append(image_path) 
-        titles.append(details['title']) # tmdb 에서 한국어 버전으로 변경 가능
+        titles.append(details['title']) 
 
     return images, titles  # get_recommendations end  
 
 
-# 데이터 불러오기
+# Get data
 movies = pickle.load(open('movies.pickle','rb'))
 cosine_sim = pickle.load(open('cosine_sim.pickle','rb'))
 
-# 화면 만들기
-st.set_page_config(layout='wide') # 전체화면 보기 위해
+# Make UI
+st.set_page_config(layout='wide') # To see the whole screen
 st.header('Inflix')
 
 movie_list = movies['title'].values
 title = st.selectbox('Choose a movie you like', movie_list)
 
-# 버튼이 클릭됐을때 
+# When the button is clicked
 #  streamlit run app.py
 if st.button('Recommend'):
     with st.spinner('Please wait...'): # progress bar
         images, titles = get_recommendations(title)
 
         idx = 0
-        for i in range(0,2): # 0~2 미만까지 
-            cols = st.columns(5) # columns(5) : 5개 컬럼 만들기
+        for i in range(0,2): # 0,1
+            cols = st.columns(5) # making columns(5)
             for col in cols:
                 col.image(images[idx])
                 col.write(titles[idx])
-                idx += 1  # 5개 컬럼에 이미지와 제목을 넣었으면 다음 행으로 넘어가서 다시 이미지, 타이틀 넣음
+                idx += 1  
